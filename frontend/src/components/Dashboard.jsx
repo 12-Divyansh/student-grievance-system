@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { API_URL } from '../api';
 
 const Dashboard = () => {
   const { logout } = useContext(AuthContext);
@@ -22,7 +23,7 @@ const Dashboard = () => {
 
   const fetchGrievances = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/grievances');
+      const res = await axios.get(`${API_URL}/grievances`);
       setGrievances(res.data);
     } catch (err) {
       console.error('Error fetching grievances:', err);
@@ -39,7 +40,7 @@ const Dashboard = () => {
       if (query.trim() === '') {
         fetchGrievances();
       } else {
-        const res = await axios.get(`http://localhost:5000/api/grievances/search?title=${query}`);
+        const res = await axios.get(`${API_URL}/grievances/search?title=${query}`);
         setGrievances(res.data);
       }
     } catch (err) {
@@ -56,11 +57,11 @@ const Dashboard = () => {
     try {
       if (editingId) {
         // Update
-        await axios.put(`http://localhost:5000/api/grievances/${editingId}`, formData);
+        await axios.put(`${API_URL}/grievances/${editingId}`, formData);
         setEditingId(null);
       } else {
         // Create
-        await axios.post('http://localhost:5000/api/grievances', formData);
+        await axios.post(`${API_URL}/grievances`, formData);
       }
       
       // Reset form and fetch updated list
@@ -90,7 +91,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this grievance?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/grievances/${id}`);
+        await axios.delete(`${API_URL}/grievances/${id}`);
         fetchGrievances();
       } catch (err) {
         console.error('Error deleting:', err);
